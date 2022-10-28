@@ -44,15 +44,26 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   # Work tools
   # Robot Arm Dependence
   python3-pip python3-dev python3-setuptools \
+  ros-noetic-moveit \
   ros-noetic-rosparam-shortcuts \
   ros-noetic-pcl-ros \
   ros-noetic-camera-info-manager \
-  # ros-noetic-position-controllers \
-  # ros-noetic-velocity-controllers \
-  # ros-noetic-effort-controllers \
-  # ros-noetic-joint-state-controller \
-  # ros-noetic-joint-state-publisher \
-  ros-noetic-controller*\
+  #dual arm controllers
+  ros-noetic-position-controllers \
+  ros-noetic-velocity-controllers \
+  ros-noetic-effort-controllers \
+  ros-noetic-joint-state-controller \
+  ros-noetic-joint-state-publisher \
+  #UR5 controllers and dependence
+  ros-noetic-trac-ik \
+  ros-noetic-industrial-robot-status-interface \
+  ros-noetic-speed-scaling-interface\
+  ros-noetic-speed-scaling-state-controller\
+  ros-noetic-ur-msgs\
+  ros-noetic-pass-through-controllers\
+  ros-noetic-ur-client-library\
+
+
   ros-noetic-aruco-detect \
   ros-noetic-visp-hand2eye-calibration \
   ros-noetic-soem \
