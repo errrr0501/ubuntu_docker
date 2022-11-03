@@ -1,5 +1,5 @@
 # syntax = docker/dockerfile:experimental
-FROM osrf/ros:noetic-desktop-full
+FROM nvidia/cuda:11.1.1-devel-ubuntu20.04
 
 ############################## SYSTEM PARAMETERS ##############################
 ## Base arguments
@@ -29,76 +29,60 @@ RUN groupadd --gid ${GID} ${GROUP} \
 # TKU
 RUN sed -i 's@archive.ubuntu.com@ftp.tku.edu.tw/@g' /etc/apt/sources.list
 
+## Timezone (ROS)
+ENV TZ=America/New_York
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 ############################### INSTALL & SETUP ###############################
 ## Install packages
+
+RUN apt-key adv --fetch-keys
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  sudo htop git wget curl \
+  sudo htop git wget curl lsb-core \
   # Shell
   byobu zsh \
   terminator \
-  dbus-x11 libglvnd0 libgl1 libglx0 libegl1 libxext6 libx11-6 libxtst6\
+  dbus-x11 libglvnd0 libgl1 libglx0 libegl1 libxext6 libx11-6 \
   # Editing tools
   nano vim \
   gnome-terminal libcanberra-gtk-module libcanberra-gtk3-module \
   # Work tools
-  # Robot Arm Dependence
   python3-pip python3-dev python3-setuptools \
-  ros-noetic-moveit \
-  ros-noetic-rosparam-shortcuts \
-  ros-noetic-pcl-ros \
-  ros-noetic-camera-info-manager \
-  #dual arm controllers
-  ros-noetic-position-controllers \
-  ros-noetic-velocity-controllers \
-  ros-noetic-effort-controllers \
-  ros-noetic-joint-state-controller \
-  ros-noetic-joint-state-publisher \
-  #UR5 controllers and dependence
-  ros-noetic-trac-ik \
-  ros-noetic-industrial-robot-status-interface \
-  ros-noetic-speed-scaling-interface\
-  ros-noetic-speed-scaling-state-controller\
-  ros-noetic-scaled-joint-trajectory-controller\
-  ros-noetic-rqt-joint-trajectory-controller\
-
-  ros-noetic-ur-msgs\
-  ros-noetic-pass-through-controllers\
-  ros-noetic-ur-client-library\
-  #realsense dependence
-  ros-noetic-realsense2-camera\
-  ros-noetic-ddynamic-reconfigure\
-
-
-
-  ros-noetic-aruco-detect \
-  ros-noetic-visp-hand2eye-calibration \
-  ros-noetic-soem \
-  ros-noetic-socketcan-interface \
-  ros-noetic-flexbe-behavior-engine \
-  ros-noetic-eigen-stl-containers \
-  ros-noetic-random-numbers \
-  ros-noetic-object-recognition-msgs \
-  ros-noetic-graph-msgs \
-  ros-noetic-octomap-msgs \
-  ros-noetic-octomap \
-  ros-noetic-octomap-mapping \
-  ros-noetic-octomap-server \
-  ros-noetic-fcl-catkin \ 
-  ros-noetic-pybind11-catkin \
-  ros-noetic-ompl \
-  ros-noetic-warehouse-ros \
-  ros-noetic-eigenpy \
+  # ros-$ROS_DISTRO-pcl-ros \
+  # ros-$ROS_DISTRO-camera-info-manager \
+  # ros-$ROS_DISTRO-position-controllers \
+  # ros-$ROS_DISTRO-velocity-controllers \
+  # ros-$ROS_DISTRO-effort-controllers \
+  # ros-$ROS_DISTRO-joint-state-controller \
+  # ros-$ROS_DISTRO-joint-state-publisher \
+  # ros-$ROS_DISTRO-aruco-detect \
+  # ros-$ROS_DISTRO-visp-hand2eye-calibration \
+  # ros-$ROS_DISTRO-soem \
+  # ros-$ROS_DISTRO-socketcan-interface \
+  # ros-$ROS_DISTRO-flexbe-behavior-engine \
+  # ros-noetic-eigen-stl-containers \
+  # ros-noetic-random-numbers \
+  # ros-noetic-object-recognition-msgs \
+  # ros-noetic-graph-msgs \
+  # ros-noetic-octomap-msgs \
+  # ros-noetic-fcl-catkin \ 
+  # ros-noetic-pybind11-catkin \
+  # ros-noetic-ompl \
+  # ros-noetic-warehouse-ros \
+  # ros-noetic-eigenpy \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists
-   
-  # If error "random_numbersConfig.cmake" come out, put https://github.com/ros-planning/random_numbers file in your workspace /src .
-  # If error code "linked by target "linear_z" in directory" appear, delete lib/libmobus file and reinstall it. (https://libmodbus.org/download/)
-  # After downloaded libmobus run "./configure &&sudo make &&sudo make install"
-  # If error "object_recognition_msgsConfig.cmake" come out, git clone https://github.com/wg-perception/object_recognition_msgs.git in your /src .
-  # If error "octomap_msgsConfig.cmake" come out, git clone https://github.com/OctoMap/octomap_msgs in your /src .
-  # If error "graph_msgsConfig.cmake" come out, git clone https://github.com/PickNikRobotics/graph_msgs.git in your /src .
-  # If error "pybind11_catkinConfig.cmake" come out, git clone https://github.com/ipab-slmc/fcl_catkin.git in your /src .
+
+## Install ros and ROS_DISTRO
+RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > \
+  /etc/apt/sources.list.d/ros-latest.list \
+  && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add - \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends ros-noetic-desktop-full \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists
+
+ENV ROS_DISTRO noetic
 
 WORKDIR /home/${USER}/.tmp
 
