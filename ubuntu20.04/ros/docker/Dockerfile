@@ -37,7 +37,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   # Shell
   byobu zsh \
   terminator \
-  dbus-x11 libglvnd0 libgl1 libglx0 libegl1 libxext6 libx11-6 libxtst6\
+  dbus-x11 libglvnd0 libgl1 libglx0 libegl1 libxext6 libx11-6 libxtst6 libinih-dev\
   # Editing tools
   nano vim \
   gnome-terminal libcanberra-gtk-module libcanberra-gtk3-module \
