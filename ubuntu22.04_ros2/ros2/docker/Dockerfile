@@ -1,5 +1,5 @@
 # syntax = docker/dockerfile:experimental
-FROM osrf/ros:rolling-desktop-full
+FROM osrf/ros:humble-desktop-full
 
 ############################## SYSTEM PARAMETERS ##############################
 ## Base arguments
@@ -42,6 +42,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   byobu zsh \
   terminator \
   dbus-x11 libglvnd0 libgl1 libglx0 libegl1 libxext6 libx11-6 \
+  #libmobus depend
+  libtool \
   # Editing tools
   nano vim \
   gnome-terminal libcanberra-gtk-module libcanberra-gtk3-module \

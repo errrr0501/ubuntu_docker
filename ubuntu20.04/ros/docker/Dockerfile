@@ -41,6 +41,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   # Editing tools
   nano vim \
   gnome-terminal libcanberra-gtk-module libcanberra-gtk3-module \
+  software-properties-common \
   # Work tools
   # Robot Arm Dependence
   python3-pip python3-dev python3-setuptools \
