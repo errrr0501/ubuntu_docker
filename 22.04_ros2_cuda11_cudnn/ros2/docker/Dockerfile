@@ -1,5 +1,5 @@
 # syntax = docker/dockerfile:experimental
-FROM osrf/ros:noetic-desktop-full
+FROM nvidia/cuda:11.7.0-cudnn8-devel-ubuntu22.04
 
 ############################## SYSTEM PARAMETERS ##############################
 ## Base arguments
@@ -13,6 +13,7 @@ ARG SHELL=/bin/bash
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES all
 # ENV NVIDIA_DRIVER_CAPABILITIES graphics, utility, compute
+ENV DEBIAN_FRONTEND=noninteractive
 
 ## Setup users and groups
 RUN groupadd --gid ${GID} ${GROUP} \
@@ -30,80 +31,56 @@ RUN groupadd --gid ${GID} ${GROUP} \
 RUN sed -i 's@archive.ubuntu.com@ftp.tku.edu.tw/@g' /etc/apt/sources.list
 
 
-############################### INSTALL & SETUP ###############################
+## Timezone (ROS)
+ENV TZ=America/New_York
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+######################## INSTALL & SETUP ###############################
 ## Install packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
   sudo htop git wget curl \
   # Shell
   byobu zsh \
   terminator \
-  ## other depend
-  dbus-x11 libglvnd0 libgl1 libglx0 libegl1 libxext6 libx11-6 libxtst6 libinih-dev\
-  software-properties-common \
-
+  dbus-x11 libglvnd0 libgl1 libglx0 libegl1 libxext6 libx11-6 \
+  ###########for add-apt-repository##################
+  software-properties-common\
+  #libmobus depend
+  libtool \
   # Editing tools
   nano vim \
   gnome-terminal libcanberra-gtk-module libcanberra-gtk3-module \
   # Work tools
-  # Robot Arm Dependence
   python3-pip python3-dev python3-setuptools \
-  ros-noetic-moveit \
-  ros-noetic-rosparam-shortcuts \
-  ros-noetic-pcl-ros \
-  ros-noetic-camera-info-manager \
-  #dual arm controllers
-  ros-noetic-position-controllers \
-  ros-noetic-velocity-controllers \
-  ros-noetic-effort-controllers \
-  ros-noetic-joint-state-controller \
-  ros-noetic-joint-state-publisher \
-  #UR5 controllers and dependence
-  ros-noetic-trac-ik \
-  ros-noetic-industrial-robot-status-interface \
-  ros-noetic-speed-scaling-interface\
-  ros-noetic-speed-scaling-state-controller\
-  ros-noetic-scaled-joint-trajectory-controller\
-  ros-noetic-rqt-joint-trajectory-controller\
 
-  ros-noetic-ur-msgs\
-  ros-noetic-pass-through-controllers\
-  ros-noetic-ur-client-library\
-  #realsense dependence
-  ros-noetic-realsense2-camera\
-  ros-noetic-ddynamic-reconfigure\
-
-
-
-  ros-noetic-aruco-detect \
-  ros-noetic-visp-hand2eye-calibration \
-  ros-noetic-soem \
-  ros-noetic-socketcan-interface \
-  ros-noetic-flexbe-behavior-engine \
-  ros-noetic-eigen-stl-containers \
-  ros-noetic-random-numbers \
-  ros-noetic-object-recognition-msgs \
-  ros-noetic-graph-msgs \
-  ros-noetic-octomap-msgs \
-  ros-noetic-octomap \
-  ros-noetic-octomap-mapping \
-  ros-noetic-octomap-server \
-  ros-noetic-fcl-catkin \ 
-  ros-noetic-pybind11-catkin \
-  ros-noetic-ompl \
-  ros-noetic-warehouse-ros \
-  ros-noetic-eigenpy \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists
-   
-  # If error "random_numbersConfig.cmake" come out, put https://github.com/ros-planning/random_numbers file in your workspace /src .
-  # If error code "linked by target "linear_z" in directory" appear, delete lib/libmobus file and reinstall it. (https://libmodbus.org/download/)
-  # After downloaded libmobus run "./configure &&sudo make &&sudo make install"
-  # If error "object_recognition_msgsConfig.cmake" come out, git clone https://github.com/wg-perception/object_recognition_msgs.git in your /src .
-  # If error "octomap_msgsConfig.cmake" come out, git clone https://github.com/OctoMap/octomap_msgs in your /src .
-  # If error "graph_msgsConfig.cmake" come out, git clone https://github.com/PickNikRobotics/graph_msgs.git in your /src .
-  # If error "pybind11_catkinConfig.cmake" come out, git clone https://github.com/ipab-slmc/fcl_catkin.git in your /src .
 
-WORKDIR /home/${USER}/.tmp
+RUN apt update && \
+    apt install -y curl gnupg2 lsb-release && \
+    curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null && \
+    apt update && \
+    apt install -y  -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" keyboard-configuration && \
+    apt install -y ros-humble-desktop-full && \
+    apt install -y python3-colcon-common-extensions && \
+    apt install -y ros-humble-v4l2-camera && \
+    apt install -y git && \
+    apt install -y xterm && \
+    apt install -y wget && \
+    apt install -y pciutils && \
+    apt -y clean && \
+    rm -rf /var/lib/apt/lists/*
+#######################
+
+WORKDIR /home/darknet_ros2_ws/src
+RUN git clone https://github.com/Ar-Ray-code/darknet_ros -b master --recursive
+RUN bash darknet_ros/rm_darknet_CMakeLists.sh
+WORKDIR /home/darknet_ros2_ws/
+#COPY ./yolov4-tiny-docker.bash /home/darknet_ros2_ws/yolov4-tiny-docker.bash
+
+# RUN ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1
+RUN LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs/:$LD_LIBRARY_PATH
 
 ######################## Register the server's public key ############## 
 ####Realsense####
@@ -130,6 +107,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   # If error "pybind11_catkinConfig.cmake" come out, git clone https://github.com/ipab-slmc/fcl_catkin.git in your /src .
 
 WORKDIR /home/${USER}/.tmp
+
 
 ## setup custom configuration
 COPY config .
