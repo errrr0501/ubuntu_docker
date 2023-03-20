@@ -56,6 +56,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists
 
+
+
 RUN apt update && \
     apt install -y curl gnupg2 lsb-release && \
     curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg && \
@@ -69,6 +71,8 @@ RUN apt update && \
     apt install -y xterm && \
     apt install -y wget && \
     apt install -y pciutils && \
+    #ROS2 Cyclone DDS
+    apt install -y ros-humble-rmw-cyclonedds-cpp\
     apt -y clean && \
     rm -rf /var/lib/apt/lists/*
 #######################

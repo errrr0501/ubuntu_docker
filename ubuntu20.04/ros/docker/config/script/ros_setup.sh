@@ -14,6 +14,7 @@ function ROSConfig_fn() {
     ROS_TYPE=$(echo ${2} | tr [a-z] [A-Z])
     echo "source /opt/ros/$ROS_DISTRO/setup.${SHELL}" >>/home/$USER/.${SHELL}rc
     echo "export ROS_MASTER_URI=http://${3}:11311" >>/home/$USER/.${SHELL}rc
+    echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >>/home/$USER/.${SHELL}rc
 
     if [ ${ROS_TYPE} == "MASTER" ]; then
         echo "export ROS_HOSTNAME=${3}" >>/home/${USER}/.${SHELL}rc
