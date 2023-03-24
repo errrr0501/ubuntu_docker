@@ -6,9 +6,9 @@ This charuco marker detection is forked from the [charuco_detector](https://gith
 
 ## Requirements 
 This package requires operating system ubuntu and setup with docker and nvidia-docker2.\
-[docker install method](https://docs.docker.com/engine/install/ubuntu/)\
+[Docker install method](https://docs.docker.com/engine/install/ubuntu/)\
 running docker without sudo\
-[**run docker without sudo**](https://docs.docker.com/engine/install/linux-postinstall/)
+[**Run docker without sudo**](https://docs.docker.com/engine/install/linux-postinstall/)
 ```bash
 sudo chmod 666 /var/run/docker.sock
 ```
