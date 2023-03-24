@@ -1,9 +1,6 @@
 # ubuntu_docker
 This ubuntu_docker package include different versions of ubnuntu which can run with docker.
 
-## Acknowledgment
-This charuco marker detection is forked from the [charuco_detector](https://github.com/carlosmccosta/charuco_detector).
-
 ## Requirements 
 This package requires operating system ubuntu and setup with docker and nvidia-docker2.\
 [Docker install method](https://docs.docker.com/engine/install/ubuntu/)\
