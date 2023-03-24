@@ -2,7 +2,7 @@
 This ubuntu_docker package include different versions of ubnuntu which can run with docker.
 
 ## Requirements 
-This package requires operating system ubuntu and setup with docker and nvidia-docker2.\
+This package requires operating system ubuntu and setup with docker and nvidia-docker2(also nvidia driver).\
 [Docker install method](https://docs.docker.com/engine/install/ubuntu/)\
 running docker without sudo\
 [**Run docker without sudo**](https://docs.docker.com/engine/install/linux-postinstall/)
