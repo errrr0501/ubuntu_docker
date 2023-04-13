@@ -100,6 +100,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   librealsense2-utils \
   librealsense2-dev \
   librealsense2-dbg \
+  python3-rosdep \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists  
   # If error "random_numbersConfig.cmake" come out, put https://github.com/ros-planning/random_numbers file in your workspace /src .
