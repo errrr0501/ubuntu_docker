@@ -65,14 +65,12 @@ RUN apt update && \
     apt update && \
     apt install -y  -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" keyboard-configuration && \
     apt install -y ros-humble-desktop-full && \
-    apt install -y python3-colcon-common-extensions && \
+    apt install -y python3-colcon-common-extensions python3-vcstool&& \
     apt install -y ros-humble-v4l2-camera && \
     apt install -y git && \
     apt install -y xterm && \
     apt install -y wget && \
     apt install -y pciutils && \
-    #ROS2 Cyclone DDS
-    apt install -y ros-humble-rmw-cyclonedds-cpp\
     apt -y clean && \
     rm -rf /var/lib/apt/lists/*
 #######################
@@ -101,6 +99,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   librealsense2-dev \
   librealsense2-dbg \
   python3-rosdep \
+  #ROS2 Cyclone DDS
+  ros-humble-rmw-cyclonedds-cpp \
+  #moveIt2 depend
+  ros-humble-moveit-msgs \
+  ros-humble-eigen-stl-containers \
+  ros-humble-generate-parameter-library \
+  ros-humble-ros-testing \
+  ros-humble-geometric-shapes \
+  ros-humble-ruckig \
+  ros-humble-srdfdom \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists  
   # If error "random_numbersConfig.cmake" come out, put https://github.com/ros-planning/random_numbers file in your workspace /src .
