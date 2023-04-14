@@ -98,9 +98,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   librealsense2-utils \
   librealsense2-dev \
   librealsense2-dbg \
-  python3-rosdep \
   #ROS2 Cyclone DDS
   ros-humble-rmw-cyclonedds-cpp \
+  #ROS2 build tools
+  libbullet-dev \
+  python3-colcon-common-extensions \
+  python3-flake8 \
+  python3-pytest-cov \
+  python3-rosdep \
+  python3-setuptools \
+  python3-vcstool \
   #moveIt2 depend
   ros-humble-moveit-msgs \
   ros-humble-eigen-stl-containers \
