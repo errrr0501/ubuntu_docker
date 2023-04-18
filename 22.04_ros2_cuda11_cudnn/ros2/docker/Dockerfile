@@ -109,6 +109,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   python3-setuptools \
   python3-vcstool \
   #moveIt2 depend
+  ros-humble-moveit \
   ros-humble-moveit-msgs \
   ros-humble-eigen-stl-containers \
   ros-humble-generate-parameter-library \
@@ -116,6 +117,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-humble-geometric-shapes \
   ros-humble-ruckig \
   ros-humble-srdfdom \
+  #vision visp depend
+  ros-humble-visp \
+  # darknet depend
+  ros-humble-diagnostic-updater \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists  
   # If error "random_numbersConfig.cmake" come out, put https://github.com/ros-planning/random_numbers file in your workspace /src .
