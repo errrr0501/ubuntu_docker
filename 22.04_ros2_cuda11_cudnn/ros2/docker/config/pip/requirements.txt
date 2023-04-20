@@ -1,6 +1,7 @@
 # catkin build Dependent
 osrf-pycommon==0.1.9
 pyrealsense2
+tf
 # install some pip packages needed for testing
 argcomplete 
 flake8-blind-except 
