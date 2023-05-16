@@ -15,3 +15,16 @@ flake8-quotes
 pytest-repeat 
 pytest-rerunfailures 
 pytest
+#autolab_core dependent
+ruamel-yaml
+scikit-learn
+colorlog
+multiprocess
+setproctitle
+scikit-image
+visualization
+#gqcnn dependent
+tensorflow-gpu==2.8.1
+protobuf==3.20
+future
+gputil
