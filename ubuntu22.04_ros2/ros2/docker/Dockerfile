@@ -81,6 +81,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   # If error "graph_msgsConfig.cmake" come out, git clone https://github.com/PickNikRobotics/graph_msgs.git in your /src .
   # If error "pybind11_catkinConfig.cmake" come out, git clone https://github.com/ipab-slmc/fcl_catkin.git in your /src .
 
+
+RUN pip3 install -y #autolab_core dependent
+ruamel-yaml
+scikit-learn
+colorlog
+multiprocess
+setproctitle
+scikit-image
+visualization
+#gqcnn dependent
+tensorflow-gpu==2.8.1
+protobuf==3.20
+future
+gputil
 WORKDIR /home/${USER}/.tmp
 
 
